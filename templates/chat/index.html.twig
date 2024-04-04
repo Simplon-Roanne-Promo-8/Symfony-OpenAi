@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %} {% block body %}
+<div class="toto"></div>
+
 <div class="container">
   <div class="row">
     <div class="col-md-8">
@@ -30,7 +32,9 @@
               Send
             </button>
           </form>
-
+          <button class="btn btn-primary mt-2" onclick="getAjaxTest()">
+            get toto
+          </button>
           <a class="btn btn-danger mt-2" href="{{ path('app_message_clear') }}">
             Clear
           </a>
@@ -39,4 +43,18 @@
     </div>
   </div>
 </div>
+
+<script>
+  let divToto = document.querySelector(".toto");
+
+  function getAjaxTest() {
+    fetch("{{ path('app_ajax_test') }}")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        divToto.innerHTML = data.toto;
+      });
+  }
+</script>
 {% endblock %}

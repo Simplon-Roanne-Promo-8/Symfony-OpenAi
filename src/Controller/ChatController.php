@@ -65,4 +65,14 @@ class ChatController extends AbstractController
 
         return $this->redirectToRoute('app_index', []);
     }
+
+    #[Route('/testAjax', name: 'app_ajax_test')]
+    public function testAjax()
+    {
+        $toto = "toto";
+
+        return $this->json([
+            'toto' => $toto
+        ]);
+    }
 }
