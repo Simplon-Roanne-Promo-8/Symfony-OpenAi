@@ -1,13 +1,42 @@
 {% extends 'base.html.twig' %} {% block body %}
 <div class="container">
-  <h1>CHAT !</h1>
-  <form action="{{ path("app_chat") }}" method="POST">
-    <input type="text" name="message" id="" />
-    <button class="btn btn-primary" type="submit">send</button>
-  </form>
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <div id="chat" class="list-group">
+            {% for message in messages %}
+            <div class="list-group-item">
+              <p>{{ message.content }}</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <form action="{{ path('app_chat') }}" method="post">
+            <input
+              type="text"
+              name="message"
+              id="message"
+              class="form-control"
+              placeholder="Type your message..."
+              style="height: 80vh" />
 
-  <div class="chat">
-    <div class="message">{{ response }}</div>
+            <button id="send" type="submit" class="btn btn-primary mt-2">
+              Send
+            </button>
+          </form>
+
+          <a class="btn btn-danger mt-2" href="{{ path('app_message_clear') }}">
+            Clear
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}

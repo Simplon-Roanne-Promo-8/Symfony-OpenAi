@@ -6,16 +6,19 @@ use OpenAI;
 
 class OpenAiService
 {
-    public static function chat(string $message)
+    public static function chat(array $messages)
     {
+
         $client = OpenAI::client("key");
+
+        $messagesToOpenAi = [];
+        foreach ($messages as $message) {
+            $messagesToOpenAi[] = ['role' => $message->getRole(), 'content' => $message->getContent()];
+        }
 
         $result = $client->chat()->create([
             'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                ['role' => 'system', 'content' => "parle moi comme un marseillais qui adore le pastis et qui utilise beaucoup d'argot"],
-                ['role' => 'user', 'content' => $message],
-            ],
+            'messages' => $messagesToOpenAi,
         ]);
 
         $response = $result->choices[0]->message->content;
