@@ -24,9 +24,15 @@ class ChatController extends AbstractController
     #[Route('/', name: 'app_index')]
     public function index(): Response
     {
+        return $this->render('chat/index.html.twig', []);
+    }
+
+    #[Route('/getmessages', name: 'app_get_messages')]
+    public function getmessages(): Response
+    {
         $messages = $this->messageRepository->findAll();
 
-        return $this->render('chat/index.html.twig', [
+        return $this->json([
             'messages' => $messages
         ]);
     }
@@ -34,8 +40,10 @@ class ChatController extends AbstractController
     #[Route('/chat', name: 'app_chat')]
     public function chat(Request $request)
     {
+        $content = json_decode($request->getContent());
+
         $messageFromUser = new Message();
-        $messageFromUser->setContent($request->request->get('message'));
+        $messageFromUser->setContent($content);
         $messageFromUser->setRole('user');
         $this->entityManager->persist($messageFromUser);
         $this->entityManager->flush();
@@ -49,7 +57,7 @@ class ChatController extends AbstractController
         $this->entityManager->persist($responseFromAi);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_index', []);
+        return $this->json('message sent');
     }
 
     #[Route('/clear', name: 'app_message_clear')]
@@ -63,16 +71,6 @@ class ChatController extends AbstractController
 
         $this->entityManager->flush();
 
-        return $this->redirectToRoute('app_index', []);
-    }
-
-    #[Route('/testAjax', name: 'app_ajax_test')]
-    public function testAjax()
-    {
-        $toto = "toto";
-
-        return $this->json([
-            'toto' => $toto
-        ]);
+        return $this->json('message cleared');
     }
 }
